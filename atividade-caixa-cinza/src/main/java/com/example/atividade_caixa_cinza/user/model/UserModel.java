@@ -25,6 +25,9 @@ public class UserModel {
     @Column(nullable = false)
     private Role role;
 
+    public UserModel() {
+    }
+
     public UserModel(UUID id, String name, String email, String password, Role role) {
         this.id = id;
         this.name = name;

@@ -16,17 +16,17 @@ public class GlobalException {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(Map.of("messsage", "Erro interno no servidor: " +erro.getMessage(), "success", false));
     }
-    @ExceptionHandler(RuntimeException.class)
+    @ExceptionHandler(EmailUtilizadoException.class)
     public ResponseEntity<Map<String, Object>> emailUtilizadoException (EmailUtilizadoException erro){
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(Map.of("messsage", erro.getMessage(), "success", false));
     }
-    @ExceptionHandler(RuntimeException.class)
+    @ExceptionHandler(EmailOuSenhaInvalidoException.class)
     public ResponseEntity<Map<String, Object>> emailOuSenhaInvalidoException (EmailOuSenhaInvalidoException erro){
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+        return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(Map.of("messsage", erro.getMessage(), "success", false));
     }
-    @ExceptionHandler(RuntimeException.class)
+    @ExceptionHandler(ConflitodDeDadosException.class)
     public ResponseEntity<Map<String, Object>> conflitoDeDadosException (ConflitodDeDadosException erro){
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(Map.of("messsage", erro.getMessage(), "success", false));

@@ -34,7 +34,6 @@ export default function Register({ onSwitchToLogin }) {
     setSuccessMsg("");
   };
 
-  // Avaliação em tempo real dos requisitos de segurança da senha
   const passwordCriteria = {
     length: form.password.length >= 10 && form.password.length <= 12,
     hasUpper: /[A-Z]/.test(form.password),

@@ -1,0 +1,402 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@300;400;600&display=swap');
+
+/* --- TOKENS E CONFIGURAÇÃO DE TEMAS ------------------------ */
+:root {
+  --marble:         #D4CFC8;
+  --marble-mid:     #B8B2AA;
+  --marble-dark:    #8A847C;
+  --stone:          #2A2724;
+  --stone-mid:      #1A1714;
+  --stone-deep:     #0F0E0C;
+  --crimson:        #C0392B;
+  --crimson-light:  #E74C3C;
+  --crimson-muted:  #8B1A1A;
+  --white:          #F5F2EE;
+  
+  /* Feedback de Sucesso */
+  --emerald:        #27AE60;
+
+  /* Tema Escuro Padrão */
+  --bg:             var(--stone-deep);
+  --bg-card:        #161412;
+  --text-primary:   var(--marble);
+  --text-muted:     var(--marble-dark);
+  --text-accent:    var(--crimson-light);
+  --border:         rgba(180, 170, 160, 0.12);
+  --border-focus:   rgba(192, 57, 43, 0.5);
+  --input-bg:       rgba(255, 255, 255, 0.03);
+  --stroke-opacity: 0.04;
+
+  --font-display:   'Cormorant Garamond', Georgia, serif;
+  --font-body:      'Josefin Sans', 'Helvetica Neue', sans-serif;
+  --transition:     0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* Sobrescrita para o Modo Claro (Calibrado para maior contraste) */
+html[data-theme="light"] {
+  --bg:             #EAE5DE;      /* Tom de linho ligeiramente mais denso para dar contraste de fundo */
+  --bg-card:        #FFFFFF;      /* Card puríssimo, destacando-se totalmente da página */
+  --text-primary:   var(--stone-deep); /* Textos principais em preto absoluto */
+  --text-muted:     #4A443E;      /* Escurecido para dar excelente destaque a labels e palavras pequenas */
+  --text-accent:    var(--crimson);
+  --border:         rgba(42, 39, 36, 0.3); /* Bordas das caixas bem mais nítidas e visíveis */
+  --border-focus:   rgba(192, 57, 43, 0.85);
+  --input-bg:       #FAFAFA;      /* Contraste suave interno para os inputs */
+  --stroke-opacity: 0.12;         /* Letreiro de fundo "ACCESS" levemente mais visível */
+}
+
+/* --- RESET ------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* --- PAGE WRAPPER ------------------------------------------ */
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  font-family: var(--font-body);
+  color: var(--text-primary);
+  padding: 2rem 1rem;
+  position: relative;
+  overflow: hidden;
+  transition: background var(--transition), color var(--transition);
+}
+
+.auth-page::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.auth-page::after {
+  content: 'ACCESS';
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-display);
+  font-size: clamp(6rem, 20vw, 18rem);
+  font-weight: 300;
+  letter-spacing: 0.2em;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(42, 39, 36, var(--stroke-opacity));
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+  transition: -webkit-text-stroke var(--transition);
+}
+
+/* Ornamentos das pontas */
+.auth-ornament-tl,
+.auth-ornament-br {
+  position: fixed;
+  width: 80px;
+  height: 80px;
+  z-index: 1;
+  pointer-events: none;
+}
+.auth-ornament-tl {
+  top: 2rem; left: 2rem;
+  border-top: 1px solid rgba(192, 57, 43, 0.35);
+  border-left: 1px solid rgba(192, 57, 43, 0.35);
+}
+.auth-ornament-br {
+  bottom: 2rem; right: 2rem;
+  border-bottom: 1px solid rgba(192, 57, 43, 0.35);
+  border-right: 1px solid rgba(192, 57, 43, 0.35);
+}
+
+/* --- BOTÃO FLUTUANTE DE TEMA ------------------------------ */
+.theme-toggle-btn {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: none;
+  border: 1px solid var(--border);
+  padding: 0.5rem 1rem;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all var(--transition);
+  z-index: 10;
+  border-radius: 1px;
+}
+.theme-toggle-btn:hover {
+  border-color: var(--text-accent);
+  color: var(--text-accent);
+}
+
+/* --- CARD -------------------------------------------------- */
+.auth-card {
+  position: relative;
+  z-index: 2;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: clamp(2rem, 5vw, 3rem) clamp(1.5rem, 5vw, 3rem);
+  width: 100%;
+  max-width: 440px;
+  animation: cardIn 0.7s cubic-bezier(0.23, 1, 0.32, 1) both;
+  transition: background var(--transition), border var(--transition);
+}
+.auth-card--register {
+  max-width: 480px;
+}
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* --- CARD HEADER ------------------------------------------- */
+.auth-card-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+.auth-logo {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.6rem;
+  color: var(--text-accent);
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  margin-bottom: 1.5rem;
+}
+.auth-eyebrow {
+  font-size: 0.62rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+.auth-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 300;
+  letter-spacing: 0.05em;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+.auth-title-line {
+  width: 40px;
+  height: 1px;
+  background: var(--crimson-muted);
+  margin: 0 auto;
+}
+
+/* --- FORM -------------------------------------------------- */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.form-group label {
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 600; /* Destaca as palavras dos labels */
+}
+.form-group input {
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  padding: 0.85rem 1rem;
+  outline: none;
+  transition: border-color var(--transition), background var(--transition), color var(--transition);
+  border-radius: 1px;
+  width: 100%;
+}
+.form-group input::placeholder { color: var(--text-muted); opacity: 0.5; }
+.form-group input:focus {
+  border-color: var(--border-focus);
+  background: rgba(192, 57, 43, 0.04);
+}
+
+/* Remove o fundo amarelo padrão do preenchimento automático do navegador */
+.form-group input:-webkit-autofill,
+.form-group input:-webkit-autofill:hover, 
+.form-group input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--text-primary) !important;
+  -webkit-box-shadow: 0 0 0px 1000px var(--bg-card) inset !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+.field-error {
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  color: var(--crimson-light);
+  margin-top: 0.1rem;
+}
+
+/* --- MARCADORES CHECKLIST DA SENHA ------------------------ */
+.password-checklist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.75rem;
+  margin-top: 0.4rem;
+}
+.password-checklist span {
+  font-size: 0.62rem;
+  letter-spacing: 0.05em;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: color var(--transition), opacity var(--transition);
+}
+.password-checklist span.invalid {
+  color: var(--text-muted);
+  opacity: 0.8; /* Mais legível no modo claro */
+}
+.password-checklist span.valid {
+  color: var(--emerald);
+  font-weight: 600;
+  opacity: 1;
+}
+
+/* --- ROLE SELECTOR ----------------------------------------- */
+.role-selector {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.role-option {
+  flex: 1;
+  min-width: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem 0.5rem;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.68rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color var(--transition), color var(--transition), background var(--transition);
+  border-radius: 1px;
+  user-select: none;
+  font-weight: 600;
+}
+.role-option input[type="radio"] { display: none; }
+.role-option:hover {
+  border-color: var(--border-focus);
+  color: var(--text-accent);
+}
+/* Corrigido: Agora preenche totalmente com contraste alto ao selecionar */
+.role-option.selected {
+  border-color: var(--crimson);
+  color: #FFFFFF !important;
+  background: var(--crimson);
+}
+
+/* --- FEEDBACK ---------------------------------------------- */
+.auth-feedback {
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  padding: 0.75rem 1rem;
+  border-radius: 1px;
+  text-align: center;
+  animation: fadeIn 0.3s ease both;
+  font-weight: 600;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.auth-error {
+  background: rgba(192, 57, 43, 0.12);
+  border: 1px solid rgba(192, 57, 43, 0.4);
+  color: var(--crimson);
+}
+html[data-theme="dark"] .auth-error {
+  color: var(--crimson-light);
+}
+.auth-success {
+  background: rgba(39, 174, 96, 0.08);
+  border: 1px solid rgba(39, 174, 96, 0.3);
+  color: var(--emerald);
+}
+
+/* --- BUTTON ------------------------------------------------ */
+.auth-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 1rem;
+  background: var(--crimson);
+  color: #FFFFFF;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  border-radius: 1px;
+  transition: background var(--transition), transform var(--transition);
+  margin-top: 0.25rem;
+  font-weight: 600;
+}
+.auth-btn:hover:not(:disabled) {
+  background: var(--crimson-light);
+  transform: translateY(-1px);
+}
+.auth-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.auth-spinner {
+  width: 16px; height: 16px;
+  border: 2px solid rgba(245, 242, 238, 0.3);
+  border-top-color: #FFFFFF;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* --- SWITCH LINK ------------------------------------------- */
+.auth-switch {
+  margin-top: 1.5rem;
+  text-align: center;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+.auth-switch-btn {
+  background: none;
+  border: none;
+  color: var(--text-accent);
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color var(--transition);
+  font-weight: 600;
+}
+.auth-switch-btn:hover { color: var(--crimson-light); }
+
+/* --- RESPONSIVE -------------------------------------------- */
+@media (max-width: 480px) {
+  .auth-card { padding: 1.75rem 1.25rem; }
+  .auth-ornament-tl, .auth-ornament-br { width: 48px; height: 48px; }
+  .role-selector { flex-direction: column; }
+  .role-option { min-width: unset; }
+}

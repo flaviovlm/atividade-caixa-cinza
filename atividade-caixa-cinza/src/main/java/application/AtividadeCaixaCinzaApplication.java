@@ -1,4 +1,4 @@
-package com.example.atividade_caixa_cinza;
+package application;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

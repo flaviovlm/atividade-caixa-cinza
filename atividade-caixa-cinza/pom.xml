@@ -10,7 +10,7 @@
 		<relativePath/> </parent>
 
 	<groupId>com.example</groupId>
-	<artifactId>atividade-caixa-cinza</artifactId>
+	<artifactId>api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>atividade-caixa-cinza</name>
 	<description>Projeto Caixa Cinza</description>

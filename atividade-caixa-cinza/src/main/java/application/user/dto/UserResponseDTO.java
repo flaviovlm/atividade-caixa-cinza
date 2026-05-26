@@ -11,6 +11,9 @@ public class UserResponseDTO {
     private Role role;
     private String message;
 
+    public UserResponseDTO() {
+    }
+
     public UserResponseDTO(UUID id, String name, Role role, String message) {
         this.id = id;
         this.name = name;

@@ -20,6 +20,9 @@ public class UserRequestDTO {
     @NotNull
     private Role role;
 
+    public UserRequestDTO() {
+    }
+
     public UserRequestDTO(String name, String email, String password, Role role) {
         this.name = name;
         this.email = email;
